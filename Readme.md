@@ -1,0 +1,1 @@
+# Jacoco plugin for multi-modules android project

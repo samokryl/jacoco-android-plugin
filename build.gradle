@@ -1,0 +1,29 @@
+plugins {
+	id 'org.jetbrains.kotlin.jvm' version '1.4.10'
+	id 'java-gradle-plugin'
+}
+
+gradlePlugin {
+	plugins {
+		simplePlugin {
+			id = 'ru.samokryl.jacoco.android'
+			implementationClass = 'ru.samokryl.jacoco.android.JacocoPlugin'
+		}
+	}
+}
+
+group 'ru.samokryl.jacoco.android'
+version '0.1.0'
+
+repositories {
+	mavenCentral()
+	google()
+}
+
+dependencies {
+	implementation "org.jetbrains.kotlin:kotlin-stdlib"
+	implementation gradleApi()
+	implementation "com.android.tools.build:gradle:3.3.2"
+
+	testImplementation "junit:junit:4.13"
+}

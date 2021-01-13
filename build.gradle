@@ -1,7 +1,7 @@
 plugins {
 	id 'org.jetbrains.kotlin.jvm' version '1.4.20'
+	id 'com.gradle.plugin-publish' version '0.12.0'
 	id 'java-gradle-plugin'
-	id 'maven-publish'
 }
 
 apply from: 'dependencies.gradle'
@@ -55,13 +55,26 @@ dependencies {
 }
 
 gradlePlugin {
+	plugins {
+		jacocoAndroid {
+			id = 'ru.samokryl.jacoco.android'
+			implementationClass = 'ru.samokryl.jacoco.android.JacocoPlugin'
+		}
+	}
+
 	testSourceSets sourceSets.integrationTest
 }
 
-publishing {
-	publications {
-		maven(MavenPublication) {
-			from components.kotlin
+pluginBundle {
+	website = 'http://samokryl.ru'
+	vcsUrl = 'https://github.com/samokryl/jacoco-android-plugin'
+	description = 'The jacoco plugin for android multi-module projects'
+
+	plugins {
+		jacocoAndroid {
+			displayName = 'Jacoco Android plugin'
+			tags = ['jacoco']
+			version = project.version
 		}
 	}
 }

@@ -1,0 +1,12 @@
+ext.versions = [
+	"kotlin"    : "1.4.20",
+	"buildTools": "3.3.2",
+	"junit"     : "4.13",
+]
+
+ext.deps = [
+	"stdLib"    : "org.jetbrains.kotlin:kotlin-stdlib-jdk8",
+	"reflect"   : "org.jetbrains.kotlin:kotlin-reflect:${versions.kotlin}",
+	"buildTools": "com.android.tools.build:gradle:${versions.buildTools}",
+	"junit"     : "junit:junit:${versions.junit}",
+]

@@ -1,16 +1,10 @@
 plugins {
-	id 'org.jetbrains.kotlin.jvm' version '1.4.10'
+	id 'org.jetbrains.kotlin.jvm' version '1.4.20'
 	id 'java-gradle-plugin'
+	id 'maven-publish'
 }
 
-gradlePlugin {
-	plugins {
-		simplePlugin {
-			id = 'ru.samokryl.jacoco.android'
-			implementationClass = 'ru.samokryl.jacoco.android.JacocoPlugin'
-		}
-	}
-}
+apply from: 'dependencies.gradle'
 
 group 'ru.samokryl.jacoco.android'
 version '0.1.0'
@@ -20,10 +14,54 @@ repositories {
 	google()
 }
 
-dependencies {
-	implementation "org.jetbrains.kotlin:kotlin-stdlib"
-	implementation gradleApi()
-	implementation "com.android.tools.build:gradle:3.3.2"
+sourceSets {
+	integrationTest {
+		kotlin {
+			srcDir file('src/functionalTest/kotlin')
+		}
+		resources {
+			srcDir file('src/functionalTest/resources')
+		}
 
-	testImplementation "junit:junit:4.13"
+		compileClasspath += sourceSets.main.output + configurations.testRuntimeClasspath
+		runtimeClasspath += output + compileClasspath
+	}
+}
+
+task integrationTest(type: Test)  {
+	description = 'Run the integration test.'
+	group = 'verification'
+
+	testClassesDirs = sourceSets.integrationTest.output.classesDirs
+	classpath = sourceSets.integrationTest.runtimeClasspath
+
+	mustRunAfter(tasks.named('test'))
+}
+
+check.dependsOn integrationTest
+
+dependencies {
+	implementation deps.stdLib
+	implementation deps.reflect
+	implementation gradleApi()
+	implementation deps.buildTools
+
+	testImplementation deps.junit
+	testImplementation gradleTestKit()
+
+	integrationTestImplementation(project)
+	integrationTestImplementation gradleTestKit()
+	integrationTestImplementation deps.junit
+}
+
+gradlePlugin {
+	testSourceSets sourceSets.integrationTest
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			from components.kotlin
+		}
+	}
 }
